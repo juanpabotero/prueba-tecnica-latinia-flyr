@@ -1,11 +1,14 @@
 <main>
   <mat-form-field>
     <mat-label>Buscar personaje...</mat-label>
-    <input matInput type="text" (keyup)="searchCharacter($event)" />
-    <mat-error *ngIf="error">
-      No se encontraron resultados para la búsqueda
-    </mat-error>
+    <input
+      matInput
+      type="text"
+      [value]="searchText"
+      (keyup)="searchCharacter($event)"
+    />
   </mat-form-field>
+  <p *ngIf="hasError">No se encontraron resultados para la búsqueda</p>
 
   <section class="characters">
     <a
@@ -18,7 +21,7 @@
           <mat-card-subtitle>
             Fecha de la última modificación:
             <br />
-            {{ character.modified.split('T')[0] }}
+            {{ character.modified.split("T")[0] }}
           </mat-card-subtitle>
         </mat-card-header>
         <img

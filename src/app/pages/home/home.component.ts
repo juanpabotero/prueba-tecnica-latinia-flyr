@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Subject,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap,
+} from 'rxjs';
 import { Character } from 'src/app/interfaces/charactersApiResponse';
 import { MarvelService } from 'src/app/services/marvel.service';
 
@@ -10,59 +17,79 @@ import { MarvelService } from 'src/app/services/marvel.service';
 })
 export class HomeComponent {
   characters: Character[] = [];
-  error = false;
+  hasError = false;
+  searchText = '';
   private searchText$ = new Subject<string>();
 
-  constructor(private marvelService: MarvelService) {}
+  constructor(
+    private marvelService: MarvelService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.getCharactersMock();
-    // this.searchText$
-    //   .pipe(
-    //     debounceTime(500),
-    //     distinctUntilChanged(),
-    //     switchMap((inputText: any) =>
-    //       this.marvelService.getCharacters(inputText)
-    //     )
-    //   )
-    //   .subscribe({
-    //     next: (res: any) => {
-    //       this.error = false;
-    //       this.characters = res.data.results;
-    //       if (this.characters.length === 0) this.error = true;
-    //     },
-    //     error: (err: any) => {
-    //       console.log(err);
-    //     },
-    //   });
-  }
+    this.activatedRoute.queryParams
+      .pipe(
+        map((params) => {
+          if (params['search']) this.searchText = params['search'];
+          return params['search'];
+        }),
+        switchMap((searchText: string) =>
+          this.marvelService.getCharacters(searchText)
+        )
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.hasError = false;
+          this.characters = res.data.results;
+          if (this.characters.length === 0) this.hasError = true;
+        },
+        error: () => {
+          this.hasError = true;
+        },
+      });
 
-  getCharacters() {
-    this.marvelService.getCharacters('').subscribe({
-      next: (res) => {
-        this.characters = res.data.results;
-        if (this.characters.length === 0) this.error = true;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-  }
-
-  getCharactersMock() {
-    this.marvelService.getCharactersMock().subscribe({
-      next: (res) => {
-        this.characters = res.data.results;
-        if (this.characters.length === 0) this.error = true;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.searchText$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        map((inputText: string) => {
+          this.router.navigate(['/characters'], {
+            queryParams: { search: inputText },
+          });
+        })
+      )
+      .subscribe();
   }
 
   searchCharacter(event: Event) {
-    const inputText = (event.target as HTMLInputElement).value;
+    const inputText = (event.target as HTMLInputElement).value
+      .trim()
+      .toLocaleLowerCase();
     this.searchText$.next(inputText);
   }
+
+  // getCharacters(searchText: string = '') {
+  //   this.marvelService.getCharacters(searchText).subscribe({
+  //     next: (res) => {
+  //       this.characters = res.data.results;
+  //       if (this.characters.length === 0) this.hasError = true;
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+  //     },
+  //   });
+  // }
+
+  // getCharactersMock() {
+  //   this.marvelService.getCharactersMock().subscribe({
+  //     next: (res) => {
+  //       this.characters = res.data.results;
+  //       if (this.characters.length === 0) this.hasError = true;
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+  //     },
+  //   });
+  // }
 }
