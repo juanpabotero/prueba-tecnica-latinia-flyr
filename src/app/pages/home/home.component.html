@@ -1,0 +1,37 @@
+<main>
+  <mat-form-field>
+    <mat-label>Buscar personaje...</mat-label>
+    <input matInput type="text" (keyup)="searchCharacter($event)" />
+    <mat-error *ngIf="error">
+      No se encontraron resultados para la búsqueda
+    </mat-error>
+  </mat-form-field>
+
+  <section class="characters">
+    <a
+      *ngFor="let character of characters"
+      [routerLink]="['/characters', character.id]"
+    >
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ character.name }}</mat-card-title>
+          <mat-card-subtitle>
+            Fecha de la última modificación:
+            <br />
+            {{ character.modified.split('T')[0] }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <img
+          mat-card-image
+          [src]="
+            character.thumbnail.path +
+            '/standard_fantastic' +
+            '.' +
+            character.thumbnail.extension
+          "
+        />
+        <mat-card-content> </mat-card-content>
+      </mat-card>
+    </a>
+  </section>
+</main>
