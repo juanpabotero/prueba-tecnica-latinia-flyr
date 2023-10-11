@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { CharactersApiResponse } from '../interfaces/charactersApiResponse';
+import { Comic, ComicsResponseApi } from '../interfaces/comicsApiResponse';
+import { forkJoin } from 'rxjs';
 import * as charactersData from '../mocks/characters.json';
 import * as comicsData from '../mocks/comics.json';
-import { ComicsResponseApi } from '../interfaces/comicsApiResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +18,6 @@ export class MarvelService {
   private query = `ts=${this.ts}&apikey=${this.apiKey}&hash=${this.hash}`;
 
   constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    // this.getCharacters('');
-    // this.getCharactersMock();
-  }
 
   getCharactersMock(): Observable<CharactersApiResponse> {
     return of(<CharactersApiResponse>charactersData);
@@ -50,5 +46,17 @@ export class MarvelService {
 
   getComicsById(url: string): Observable<ComicsResponseApi> {
     return this.http.get<ComicsResponseApi>(`${url}?${this.query}`);
+  }
+
+  getComicsRelatedToCharacter(comics: any): Observable<Comic[]> {
+    const comicsRequests: any[] = [];
+    for (const comic of comics) {
+      comicsRequests.push(this.getComicsById(comic.resourceURI));
+    }
+    return forkJoin(comicsRequests).pipe(
+      map((res) => {
+        return res.map((comic) => comic.data.results[0]);
+      })
+    );
   }
 }

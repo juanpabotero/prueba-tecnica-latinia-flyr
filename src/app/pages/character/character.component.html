@@ -1,58 +1,15 @@
-<div *ngIf="comics.length > 0">
-  <mat-card class="character-card">
-    <mat-card-header>
-      <mat-card-title>{{ character.name }}</mat-card-title>
-      <mat-card-subtitle>
-        Fecha de la última modificación:
-        <br />
-        {{ character.modified.split("T")[0] }}
-      </mat-card-subtitle>
-    </mat-card-header>
-    <img
-      mat-card-image
-      [src]="
-        character.thumbnail.path +
-        '/standard_fantastic' +
-        '.' +
-        character.thumbnail.extension
-      "
-    />
-    <mat-card-content class="character-content">
-      <p *ngIf="character.description; else noDescription">
-        {{ character.description }}
-      </p>
-      <ng-template #noDescription>
-        No hay descripción para el personaje
-      </ng-template>
-      <h3>Historias en las que aparece el personaje:</h3>
-      <ul>
-        <li *ngFor="let storie of character.stories.items | slice : 0 : 5">
-          {{ storie.name }}
-        </li>
-      </ul>
-      <h3>Comics en los que aparece el personaje:</h3>
-      <mat-form-field>
-        <mat-label>Filtrar por formato</mat-label>
-        <mat-select (selectionChange)="filterComics($event)">
-          <mat-option *ngFor="let format of formats" [value]="format">
-            {{ format }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <p *ngIf="!hasComics">No se encontraron Comics con este formato</p>
-      <article *ngFor="let comic of filteredComics">
-        <img
-          [src]="
-            comic.thumbnail.path +
-            '/standard_fantastic' +
-            '.' +
-            comic.thumbnail.extension
-          "
-          alt=""
-        />
-        <h4>{{ comic.title }}</h4>
-        <p>{{ comic.dates[0].date.split("T")[0] }}</p>
-      </article>
-    </mat-card-content>
-  </mat-card>
+<div *ngIf="character" class="character-card-container">
+  <app-character-card
+    [character]="character"
+    [filteredComics]="filteredComics"
+    [hasComics]="hasComics"
+    [showDetails]="true"
+    (filterComicsEvent)="filterComics($event)"
+  ></app-character-card>
 </div>
+<ng-container *ngIf="!isLoading && !character">
+  <p class="no-character">No se ha encontrado el personaje :(</p>
+</ng-container>
+<ng-container *ngIf="isLoading">
+  <mat-spinner class="spinner" [color]="'warn'"></mat-spinner>
+</ng-container>

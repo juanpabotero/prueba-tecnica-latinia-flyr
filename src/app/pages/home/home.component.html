@@ -8,33 +8,22 @@
       (keyup)="searchCharacter($event)"
     />
   </mat-form-field>
-  <p *ngIf="hasError">No se encontraron resultados para la búsqueda</p>
+  <p *ngIf="hasError && !isLoading">
+    No se encontraron resultados para la búsqueda
+  </p>
 
-  <section class="characters">
+  <section *ngIf="characters.length > 0 && !isLoading" class="characters">
     <a
       *ngFor="let character of characters"
       [routerLink]="['/characters', character.id]"
     >
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>{{ character.name }}</mat-card-title>
-          <mat-card-subtitle>
-            Fecha de la última modificación:
-            <br />
-            {{ character.modified.split("T")[0] }}
-          </mat-card-subtitle>
-        </mat-card-header>
-        <img
-          mat-card-image
-          [src]="
-            character.thumbnail.path +
-            '/standard_fantastic' +
-            '.' +
-            character.thumbnail.extension
-          "
-        />
-        <mat-card-content> </mat-card-content>
-      </mat-card>
+      <app-character-card
+        [character]="character"
+        [showDetails]="false"
+      ></app-character-card>
     </a>
   </section>
+  <ng-container *ngIf="isLoading">
+    <mat-spinner class="spinner" [color]="'warn'"></mat-spinner>
+  </ng-container>
 </main>

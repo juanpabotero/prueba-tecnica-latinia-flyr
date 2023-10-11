@@ -1,0 +1,62 @@
+<mat-card class="character-card">
+  <mat-card-header class="header">
+    <mat-card-title>{{ character.name }}</mat-card-title>
+    <mat-card-subtitle>
+      Fecha de la última modificación:
+      <br />
+      {{ character.modified.split("T")[0] }}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <img
+    mat-card-image
+    [src]="
+      character.thumbnail.path +
+      '/standard_fantastic' +
+      '.' +
+      character.thumbnail.extension
+    "
+  />
+  <mat-card-content *ngIf="showDetails" class="character-content">
+    <p *ngIf="character.description; else noDescription">
+      {{ character.description }}
+    </p>
+    <ng-template #noDescription>
+      <p>No hay descripción para el personaje</p>
+    </ng-template>
+    <h3>Historias en las que aparece el personaje:</h3>
+    <ul>
+      <li *ngFor="let storie of character.stories.items | slice : 0 : 5">
+        {{ storie.name }}
+      </li>
+    </ul>
+    <h3>Comics en los que aparece el personaje:</h3>
+    <mat-form-field [style]="{ width: '100%' }">
+      <mat-label>Filtrar por formato</mat-label>
+      <mat-select (selectionChange)="filterComics($event)">
+        <mat-option *ngFor="let format of formats" [value]="format">
+          {{ format }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p *ngIf="!hasComics">No se encontraron Comics.</p>
+    <div class="comics">
+      <article *ngFor="let comic of filteredComics">
+        <img
+          [src]="
+            comic.thumbnail.path +
+            '/standard_fantastic' +
+            '.' +
+            comic.thumbnail.extension
+          "
+          alt=""
+        />
+        <h4>{{ comic.title }}</h4>
+        <p>
+          Fecha de publicación:
+          <br />
+          {{ comic.dates[0].date.split("T")[0] }}
+        </p>
+      </article>
+    </div>
+  </mat-card-content>
+</mat-card>

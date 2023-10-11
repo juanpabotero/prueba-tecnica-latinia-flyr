@@ -18,6 +18,7 @@ import { MarvelService } from 'src/app/services/marvel.service';
 export class HomeComponent {
   characters: Character[] = [];
   hasError = false;
+  isLoading = true;
   searchText = '';
   private searchText$ = new Subject<string>();
 
@@ -28,10 +29,16 @@ export class HomeComponent {
   ) {}
 
   ngOnInit() {
+    // this,this.getCharactersMock();
+
     this.activatedRoute.queryParams
       .pipe(
         map((params) => {
-          if (params['search']) this.searchText = params['search'];
+          if (params['search']) {
+            this.searchText = params['search'];
+          } else {
+            this.searchText = '';
+          }
           return params['search'];
         }),
         switchMap((searchText: string) =>
@@ -40,11 +47,13 @@ export class HomeComponent {
       )
       .subscribe({
         next: (res: any) => {
+          this.isLoading = false;
           this.hasError = false;
           this.characters = res.data.results;
           if (this.characters.length === 0) this.hasError = true;
         },
         error: () => {
+          this.isLoading = false;
           this.hasError = true;
         },
       });
@@ -85,10 +94,11 @@ export class HomeComponent {
   //   this.marvelService.getCharactersMock().subscribe({
   //     next: (res) => {
   //       this.characters = res.data.results;
+  //       this.isLoading = false;
   //       if (this.characters.length === 0) this.hasError = true;
   //     },
-  //     error: (err) => {
-  //       console.log(err);
+  //     error: () => {
+  //       this.hasError = true;
   //     },
   //   });
   // }
