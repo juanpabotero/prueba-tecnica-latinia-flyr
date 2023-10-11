@@ -11,7 +11,7 @@ import * as comicsData from '../mocks/comics.json';
   providedIn: 'root',
 })
 export class MarvelService {
-  private baseUrl = 'http://gateway.marvel.com/v1/public';
+  private baseUrl = 'https://gateway.marvel.com/v1/public';
   private apiKey = 'e2ad79929a42e78613383753917f0476';
   private hash = '0a8d5bef2a76da6f44bd8937dd08ca75';
   private ts = '1000';
