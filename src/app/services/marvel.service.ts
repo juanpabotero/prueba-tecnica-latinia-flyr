@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, forkJoin, map, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { CharactersApiResponse } from '../interfaces/charactersApiResponse';
 import { Comic, ComicsResponseApi } from '../interfaces/comicsApiResponse';
-import { forkJoin } from 'rxjs';
 import * as charactersData from '../mocks/characters.json';
 import * as comicsData from '../mocks/comics.json';
 
@@ -11,10 +11,10 @@ import * as comicsData from '../mocks/comics.json';
   providedIn: 'root',
 })
 export class MarvelService {
-  private baseUrl = 'https://gateway.marvel.com/v1/public';
-  private apiKey = 'e2ad79929a42e78613383753917f0476';
-  private hash = '0a8d5bef2a76da6f44bd8937dd08ca75';
-  private ts = '1000';
+  private baseUrl = environment.baseUrl;
+  private apiKey = environment.apiKey;
+  private hash = environment.hash;
+  private ts = environment.ts;
   private query = `ts=${this.ts}&apikey=${this.apiKey}&hash=${this.hash}`;
 
   constructor(private http: HttpClient) {}
