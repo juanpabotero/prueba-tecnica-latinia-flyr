@@ -1,29 +1,27 @@
-<main>
-  <mat-form-field>
-    <mat-label>Buscar personaje...</mat-label>
-    <input
-      matInput
-      type="text"
-      [value]="searchText"
-      (keyup)="searchCharacter($event)"
-    />
-  </mat-form-field>
-  <p *ngIf="hasError && !isLoading">
-    No se encontraron resultados para la búsqueda
-  </p>
+<mat-form-field class="search-input">
+  <mat-label>Buscar personaje...</mat-label>
+  <input
+    matInput
+    type="text"
+    [value]="searchText"
+    (keyup)="searchCharacter($event)"
+  />
+</mat-form-field>
+<p *ngIf="hasError && !isLoading">
+  No se encontraron resultados para la búsqueda
+</p>
 
-  <section *ngIf="characters.length > 0 && !isLoading" class="characters">
-    <a
-      *ngFor="let character of characters"
-      [routerLink]="['/characters', character.id]"
-    >
-      <app-character-card
-        [character]="character"
-        [showDetails]="false"
-      ></app-character-card>
-    </a>
-  </section>
-  <ng-container *ngIf="isLoading">
-    <mat-spinner class="spinner" [color]="'warn'"></mat-spinner>
-  </ng-container>
-</main>
+<section *ngIf="characters.length > 0 && !isLoading" class="characters">
+  <a
+    *ngFor="let character of characters"
+    [routerLink]="['/characters', character.id]"
+  >
+    <app-character-card
+      [character]="character"
+      [showDetails]="false"
+    ></app-character-card>
+  </a>
+</section>
+<ng-container *ngIf="isLoading">
+  <mat-spinner class="spinner" [color]="'warn'"></mat-spinner>
+</ng-container>

@@ -1,7 +1,7 @@
 <mat-card class="character-card">
   <mat-card-header class="header">
-    <mat-card-title>{{ character.name }}</mat-card-title>
-    <mat-card-subtitle>
+    <mat-card-title class="title">{{ character.name }}</mat-card-title>
+    <mat-card-subtitle class="subtitle">
       Fecha de la última modificación:
       <br />
       {{ character.modified.split("T")[0] }}
@@ -17,20 +17,20 @@
     "
   />
   <mat-card-content *ngIf="showDetails" class="character-content">
-    <p *ngIf="character.description; else noDescription">
+    <p *ngIf="character.description; else noDescription" class="description">
       {{ character.description }}
     </p>
     <ng-template #noDescription>
       <p>No hay descripción para el personaje</p>
     </ng-template>
     <h3>Historias en las que aparece el personaje:</h3>
-    <ul>
+    <ul class="stories">
       <li *ngFor="let storie of character.stories.items | slice : 0 : 5">
         {{ storie.name }}
       </li>
     </ul>
     <h3>Comics en los que aparece el personaje:</h3>
-    <mat-form-field [style]="{ width: '100%' }">
+    <mat-form-field class="comicsFilter">
       <mat-label>Filtrar por formato</mat-label>
       <mat-select (selectionChange)="filterComics($event)">
         <mat-option *ngFor="let format of formats" [value]="format">

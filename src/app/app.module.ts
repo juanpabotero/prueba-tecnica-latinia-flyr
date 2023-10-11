@@ -7,29 +7,35 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CharacterComponent } from './pages/character/character.component';
-import { HomeComponent } from './pages/home/home.component';
+import { CharacterCardComponent } from './components/character-card/character-card.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
-import { CharacterCardComponent } from './components/character-card/character-card.component';
+import { CharacterComponent } from './pages/character/character.component';
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, CharacterComponent, HomeComponent, FooterComponent, HeaderComponent, CharacterCardComponent],
+  declarations: [
+    AppComponent,
+    CharacterCardComponent,
+    CharacterComponent,
+    FooterComponent,
+    HeaderComponent,
+    HomeComponent,
+  ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
     BrowserAnimationsModule,
+    BrowserModule,
     FormsModule,
-    MatInputModule,
+    HttpClientModule,
     MatCardModule,
+    MatInputModule,
     MatListModule,
-    MatSelectModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

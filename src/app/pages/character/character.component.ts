@@ -80,12 +80,7 @@ export class CharacterComponent implements OnInit {
 
   sortArrayByDate(array: any[]) {
     array.sort((a, b) => {
-      // sort by date
-      if (a.dates[0].date < b.dates[0].date) {
-        return 1;
-      } else {
-        return -1;
-      }
+      return a.dates[0].date < b.dates[0].date ? 1 : -1;
     });
   }
 
