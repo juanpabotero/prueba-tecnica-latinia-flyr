@@ -49,8 +49,7 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all",
-              "baseHref": "/prueba-tecnica-latinia-flyr/"
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
