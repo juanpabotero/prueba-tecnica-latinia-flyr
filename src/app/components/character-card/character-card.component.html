@@ -24,11 +24,17 @@
       <p>No hay descripción para el personaje</p>
     </ng-template>
     <h3>Historias en las que aparece el personaje:</h3>
-    <ul class="stories">
+    <ul
+      *ngIf="character.stories.items.length > 0; else noStories"
+      class="stories"
+    >
       <li *ngFor="let storie of character.stories.items | slice : 0 : 5">
         {{ storie.name }}
       </li>
     </ul>
+    <ng-template #noStories>
+      <p>No se encontraron historias para el personaje</p>
+    </ng-template>
     <h3>Comics en los que aparece el personaje:</h3>
     <mat-form-field class="comicsFilter">
       <mat-label>Filtrar por formato</mat-label>
