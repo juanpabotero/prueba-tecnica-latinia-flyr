@@ -51,7 +51,8 @@ export class MarvelService {
   getComicsRelatedToCharacter(comics: any): Observable<Comic[]> {
     const comicsRequests: any[] = [];
     for (const comic of comics) {
-      comicsRequests.push(this.getComicsById(comic.resourceURI));
+      const urlComic = comic.resourceURI.replace('http', 'https');
+      comicsRequests.push(this.getComicsById(urlComic));
     }
     return forkJoin(comicsRequests).pipe(
       map((res) => {
