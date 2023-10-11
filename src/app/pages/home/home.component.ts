@@ -34,11 +34,7 @@ export class HomeComponent {
     this.activatedRoute.queryParams
       .pipe(
         map((params) => {
-          if (params['search']) {
-            this.searchText = params['search'];
-          } else {
-            this.searchText = '';
-          }
+          this.searchText = params['search'] || '';
           return params['search'];
         }),
         switchMap((searchText: string) =>
@@ -59,16 +55,12 @@ export class HomeComponent {
       });
 
     this.searchText$
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        map((inputText: string) => {
-          this.router.navigate(['/characters'], {
-            queryParams: { search: inputText },
-          });
-        })
-      )
-      .subscribe();
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe((searchText: string) => {
+        this.router.navigate(['/characters'], {
+          queryParams: { search: searchText },
+        });
+      });
   }
 
   searchCharacter(event: Event) {
