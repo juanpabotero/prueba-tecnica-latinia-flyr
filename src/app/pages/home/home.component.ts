@@ -29,8 +29,6 @@ export class HomeComponent {
   ) {}
 
   ngOnInit() {
-    // this,this.getCharactersMock();
-
     this.activatedRoute.queryParams
       .pipe(
         map((params) => {
@@ -69,29 +67,4 @@ export class HomeComponent {
       .toLocaleLowerCase();
     this.searchText$.next(inputText);
   }
-
-  // getCharacters(searchText: string = '') {
-  //   this.marvelService.getCharacters(searchText).subscribe({
-  //     next: (res) => {
-  //       this.characters = res.data.results;
-  //       if (this.characters.length === 0) this.hasError = true;
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //     },
-  //   });
-  // }
-
-  // getCharactersMock() {
-  //   this.marvelService.getCharactersMock().subscribe({
-  //     next: (res) => {
-  //       this.characters = res.data.results;
-  //       this.isLoading = false;
-  //       if (this.characters.length === 0) this.hasError = true;
-  //     },
-  //     error: () => {
-  //       this.hasError = true;
-  //     },
-  //   });
-  // }
 }
