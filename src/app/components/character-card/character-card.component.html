@@ -39,7 +39,7 @@
       </mat-select>
     </mat-form-field>
     <p *ngIf="!hasComics">No se encontraron Comics.</p>
-    <div class="comics">
+    <div class="comics-container">
       <article *ngFor="let comic of filteredComics">
         <img
           [src]="
