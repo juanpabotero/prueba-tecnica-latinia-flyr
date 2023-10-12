@@ -13,7 +13,7 @@
 
 <section *ngIf="characters.length > 0 && !isLoading" class="characters">
   <a
-    *ngFor="let character of characters"
+    *ngFor="let character of characters; trackBy: trackByFn"
     [routerLink]="['/characters', character.id]"
   >
     <app-character-card
