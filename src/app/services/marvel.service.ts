@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, map, of } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CharactersApiResponse } from '../interfaces/charactersApiResponse';
 import { Comic, ComicsResponseApi } from '../interfaces/comicsApiResponse';
-import * as charactersData from '../mocks/characters.json';
-import * as comicsData from '../mocks/comics.json';
 
 @Injectable({
   providedIn: 'root',
@@ -18,14 +16,6 @@ export class MarvelService {
   private query = `ts=${this.ts}&apikey=${this.apiKey}&hash=${this.hash}`;
 
   constructor(private http: HttpClient) {}
-
-  getCharactersMock(): Observable<CharactersApiResponse> {
-    return of(<CharactersApiResponse>charactersData);
-  }
-
-  getComicsMock(): Observable<ComicsResponseApi> {
-    return of(<ComicsResponseApi>comicsData);
-  }
 
   getCharacters(searchText: string): Observable<CharactersApiResponse> {
     if (searchText) {
