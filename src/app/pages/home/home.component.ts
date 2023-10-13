@@ -62,6 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe((searchText: string) => {
+        this.isLoading = true;
         this.router.navigate(['/characters'], {
           queryParams: { search: searchText },
         });
