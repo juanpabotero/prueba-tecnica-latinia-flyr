@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { Character } from 'src/app/interfaces/charactersApiResponse';
 import { Comic } from 'src/app/interfaces/comicsApiResponse';
 
@@ -6,6 +12,7 @@ import { Comic } from 'src/app/interfaces/comicsApiResponse';
   selector: 'app-character-card',
   templateUrl: './character-card.component.html',
   styleUrls: ['./character-card.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterCardComponent {
   @Input() character!: Character;

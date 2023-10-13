@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { Character } from 'src/app/interfaces/charactersApiResponse';
 import { Comic } from 'src/app/interfaces/comicsApiResponse';
 import { MarvelService } from 'src/app/services/marvel.service';
@@ -10,9 +10,10 @@ import { MarvelService } from 'src/app/services/marvel.service';
   templateUrl: './character.component.html',
   styleUrls: ['./character.component.sass'],
 })
-export class CharacterComponent implements OnInit {
+export class CharacterComponent implements OnInit, OnDestroy {
   character!: Character;
   comics: Comic[] = [];
+  dataSubscription: Subscription | undefined;
   filteredComics: Comic[] = [];
   hasComics = this.filteredComics.length > 0;
   isLoading = true;
@@ -22,8 +23,8 @@ export class CharacterComponent implements OnInit {
     private marvelService: MarvelService
   ) {}
 
-  ngOnInit() {
-    this.activatedRoute.params
+  ngOnInit(): void {
+    this.dataSubscription = this.activatedRoute.params
       .pipe(switchMap(({ id }) => this.marvelService.getCharacterById(id)))
       .subscribe({
         next: (character) => {
@@ -46,6 +47,10 @@ export class CharacterComponent implements OnInit {
             });
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.dataSubscription?.unsubscribe();
   }
 
   sortArrayByDate(array: any[]) {

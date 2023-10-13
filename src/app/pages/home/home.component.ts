@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Subject,
@@ -6,6 +6,7 @@ import {
   distinctUntilChanged,
   map,
   switchMap,
+  takeUntil,
 } from 'rxjs';
 import { Character } from 'src/app/interfaces/charactersApiResponse';
 import { MarvelService } from 'src/app/services/marvel.service';
@@ -15,20 +16,21 @@ import { MarvelService } from 'src/app/services/marvel.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.sass'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
   characters: Character[] = [];
   hasError = false;
   isLoading = true;
   searchText = '';
+  unsubscribe$ = new Subject<void>();
   private searchText$ = new Subject<string>();
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private marvelService: MarvelService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.activatedRoute.queryParams
       .pipe(
         map((params) => {
@@ -37,7 +39,8 @@ export class HomeComponent {
         }),
         switchMap((searchText: string) =>
           this.marvelService.getCharacters(searchText)
-        )
+        ),
+        takeUntil(this.unsubscribe$)
       )
       .subscribe({
         next: (res: any) => {
@@ -53,7 +56,11 @@ export class HomeComponent {
       });
 
     this.searchText$
-      .pipe(debounceTime(500), distinctUntilChanged())
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe$)
+      )
       .subscribe((searchText: string) => {
         this.router.navigate(['/characters'], {
           queryParams: { search: searchText },
@@ -61,10 +68,19 @@ export class HomeComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   searchCharacter(event: Event) {
     const inputText = (event.target as HTMLInputElement).value
       .trim()
       .toLocaleLowerCase();
     this.searchText$.next(inputText);
+  }
+
+  trackByFn(index: number, character: Character) {
+    return character.id;
   }
 }
